@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class AppGUI {
     private JFrame frame;
     private DefaultListModel<String> listaModelo;
@@ -109,6 +108,9 @@ public class AppGUI {
         JTextField incrementDayField = new JTextField();
         JTextField incrementFoodField = new JTextField();
         JTextField finalFoodField = new JTextField();
+        JTextField durationField = new JTextField("30"); // Default duration
+        String[] foodPatterns = {"Lineal", "Constante", "Incremental", "Alternante"};
+        JComboBox<String> foodPatternBox = new JComboBox<>(foodPatterns);
 
         JPanel panel = new JPanel(new GridLayout(0, 2));
         panel.add(new JLabel("Nombre:"));
@@ -123,14 +125,16 @@ public class AppGUI {
         panel.add(tempField);
         panel.add(new JLabel("Luminosidad:"));
         panel.add(luminosityBox);
-        panel.add(new JLabel("Comida Inicial:"));
+        panel.add(new JLabel("Comida Inicial (µg):"));
         panel.add(initialFoodField);
         panel.add(new JLabel("Día Incremento:"));
         panel.add(incrementDayField);
-        panel.add(new JLabel("Comida Incremento:"));
+        panel.add(new JLabel("Comida Incremento (µg):"));
         panel.add(incrementFoodField);
-        panel.add(new JLabel("Comida Final:"));
+        panel.add(new JLabel("Comida Final (µg):"));
         panel.add(finalFoodField);
+        panel.add(new JLabel("Patrón de Comida:"));
+        panel.add(foodPatternBox);
 
         int result = JOptionPane.showConfirmDialog(frame, panel, "Añadir Población", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
@@ -138,17 +142,6 @@ public class AppGUI {
                 String nombre = nameField.getText();
                 Date startDate = sdf.parse(startDateField.getText());
                 int durationDays = Integer.parseInt(daysField.getText());
-
-                if (durationDays > 30) {
-                    JOptionPane.showMessageDialog(frame, "El período del experimento no puede exceder los 30 días.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(startDate);
-                calendar.add(Calendar.DAY_OF_MONTH, durationDays);
-                Date endDate = calendar.getTime();
-
                 int initialCount = Integer.parseInt(initialCountField.getText());
                 double temperature = Double.parseDouble(tempField.getText());
                 String luminosity = (String) luminosityBox.getSelectedItem();
@@ -156,10 +149,15 @@ public class AppGUI {
                 int incrementDay = Integer.parseInt(incrementDayField.getText());
                 int incrementFood = Integer.parseInt(incrementFoodField.getText());
                 int finalFood = Integer.parseInt(finalFoodField.getText());
+                int foodPattern = foodPatternBox.getSelectedIndex() + 1;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startDate);
+                calendar.add(Calendar.DAY_OF_MONTH, durationDays);
+                Date endDate = calendar.getTime();
 
                 Poblacion poblacion = new Poblacion(nombre, startDate, endDate, initialCount, temperature, luminosity,
-                        initialFood, incrementDay, incrementFood, finalFood);
-                poblacion.calcularComidaPorDia();
+                        initialFood, incrementDay, incrementFood, finalFood, durationDays, foodPattern);
                 experimento.addPoblacion(poblacion);
                 updateList();
             } catch (ParseException | NumberFormatException ex) {
@@ -188,14 +186,14 @@ public class AppGUI {
 
             if (poblacion != null) {
                 StringBuilder comidaDiaria = new StringBuilder();
-                for (int i = 0; i < 30; i++) {
-                    comidaDiaria.append(String.format("Día %d: %d\n", i + 1, poblacion.getComidaPorDia()[i]));
+                for (int i = 0; i < poblacion.getComidaPorDia().length; i++) {
+                    comidaDiaria.append(String.format("Día %d: %d µg\n", i + 1, poblacion.getComidaPorDia()[i]));
                 }
 
                 String details = String.format(
                         "Nombre: %s\nFecha Inicio: %s\nFecha Fin: %s\nBacterias Iniciales: %d\n" +
-                                "Temperatura: %.1f\nLuminosidad: %s\nComida Inicial: %d\nDía Incremento: %d\n" +
-                                "Comida Incremento: %d\nComida Final: %d\nComida Diaria:\n%s",
+                                "Temperatura: %.1f\nLuminosidad: %s\nComida Inicial: %d µg\nDía Incremento: %d\n" +
+                                "Comida Incremento: %d µg\nComida Final: %d µg\nComida Diaria:\n%s",
                         poblacion.getNombre(),
                         sdf.format(poblacion.getFechaInicio()),
                         sdf.format(poblacion.getFechaFin()),

@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Poblacion implements Serializable {
@@ -12,22 +13,62 @@ public class Poblacion implements Serializable {
     private int diaIncremento;
     private int comidaIncremento;
     private int comidaFinal;
-    private int[] comidaPorDia = new int[30];
+    private int[] comidaPorDia;
 
     public Poblacion(String nombre, Date fechaInicio, Date fechaFin, int bacteriasIniciales,
                      double temperatura, String luminosidad, int comidaInicial, int diaIncremento,
-                     int comidaIncremento, int comidaFinal) {
+                     int comidaIncremento, int comidaFinal, int duracionDias, int patronComida) {
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.bacteriasIniciales = bacteriasIniciales;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
-        this.comidaInicial = comidaInicial;
+        this.comidaInicial = comidaInicial;  // ya en microgramos
         this.diaIncremento = diaIncremento;
-        this.comidaIncremento = comidaIncremento;
-        this.comidaFinal = comidaFinal;
-        this.comidaPorDia[0] = comidaInicial;
+        this.comidaIncremento = comidaIncremento;  // ya en microgramos
+        this.comidaFinal = comidaFinal;  // ya en microgramos
+        this.comidaPorDia = new int[duracionDias];
+        calcularComidaPorDia(patronComida);
+    }
+
+    private void calcularComidaPorDia(int patronComida) {
+        switch (patronComida) {
+            case 1:
+                Arrays.fill(comidaPorDia, comidaInicial);
+                break;
+            case 2:
+                double incrementoDiario = (double) (comidaFinal - comidaInicial) / comidaPorDia.length;
+                for (int i = 0; i < comidaPorDia.length; i++) {
+                    comidaPorDia[i] = comidaInicial + (int) Math.round(i * incrementoDiario);
+                }
+                break;
+            case 3:
+                for (int i = 0; i < comidaPorDia.length; i++) {
+                    comidaPorDia[i] = (i % 2 == 0) ? comidaInicial : 0;
+                }
+                break;
+            default:
+                calcularComidaLineal();
+        }
+    }
+
+    private void calcularComidaLineal() {
+        comidaPorDia[0] = comidaInicial;
+        if (diaIncremento > 0) {
+            double incrementoDiario = (double) (comidaIncremento - comidaInicial) / diaIncremento;
+            for (int i = 1; i <= diaIncremento; i++) {
+                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(incrementoDiario);
+            }
+        }
+        int díasRestantes = comidaPorDia.length - diaIncremento - 1;
+        if (díasRestantes > 0) {
+            double decrementoDiario = (double) (comidaFinal - comidaPorDia[diaIncremento]) / díasRestantes;
+            for (int i = diaIncremento + 1; i < comidaPorDia.length; i++) {
+                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(decrementoDiario);
+            }
+        }
+        comidaPorDia[comidaPorDia.length - 1] = comidaFinal;
     }
 
     public String getNombre() {
@@ -116,26 +157,5 @@ public class Poblacion implements Serializable {
 
     public void setComidaPorDia(int[] comidaPorDia) {
         this.comidaPorDia = comidaPorDia;
-    }
-
-    public void calcularComidaPorDia() {
-        comidaPorDia[0] = comidaInicial;
-
-        if (diaIncremento > 0) {
-            double incrementoDiario = (double) (comidaIncremento - comidaInicial) / diaIncremento;
-            for (int i = 1; i <= diaIncremento; i++) {
-                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(incrementoDiario);
-            }
-        }
-
-        int díasRestantes = 29 - diaIncremento;
-        if (díasRestantes > 0) {
-            double incrementoDiarioFinal = (double) (comidaFinal - comidaPorDia[diaIncremento]) / díasRestantes;
-            for (int i = diaIncremento + 1; i < 30; i++) {
-                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(incrementoDiarioFinal);
-            }
-        }
-
-        comidaPorDia[29] = comidaFinal;
     }
 }
