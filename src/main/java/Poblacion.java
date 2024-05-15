@@ -24,12 +24,24 @@ public class Poblacion implements Serializable {
         this.bacteriasIniciales = bacteriasIniciales;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
-        this.comidaInicial = comidaInicial;
+        this.comidaInicial = comidaInicial * 1000;
         this.diaIncremento = diaIncremento;
-        this.comidaIncremento = comidaIncremento;
-        this.comidaFinal = comidaFinal;
+        this.comidaIncremento = comidaIncremento * 1000;
+        this.comidaFinal = comidaFinal * 1000;
         this.comidaPorDia = new int[duracionDias];
         calcularComidaPorDia(patronComida);
+    }
+
+    public void setComidaInicial(int comidaInicial) {
+        this.comidaInicial = comidaInicial * 1000;
+    }
+
+    public void setComidaIncremento(int comidaIncremento) {
+        this.comidaIncremento = comidaIncremento * 1000;
+    }
+
+    public void setComidaFinal(int comidaFinal) {
+        this.comidaFinal = comidaFinal * 1000;
     }
 
     private void calcularComidaPorDia(int patronComida) {
@@ -44,16 +56,13 @@ public class Poblacion implements Serializable {
                 }
                 break;
             case 3:
-                double totalIncrementDays = Math.ceil(comidaPorDia.length / 2.0);
-                double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / totalIncrementDays;
-                double currentFood = comidaInicial;
-
-                for (int i = 0; i < comidaPorDia.length; i++) {
-                    if (i % 2 == 0) {
-                        comidaPorDia[i] = (int) Math.round(currentFood);
-                        currentFood += incrementoCadaDosDias;
-                    } else {
+                comidaPorDia[0] = comidaInicial;
+                for (int i = 1; i < comidaPorDia.length; i++) {
+                    if (i % 2 == 1) {
                         comidaPorDia[i] = comidaPorDia[i - 1];
+                    } else {
+                        double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / Math.ceil((comidaPorDia.length - 1) / 2.0);
+                        comidaPorDia[i] = (int) Math.round(comidaPorDia[i - 1] + incrementoCadaDosDias);
                     }
                 }
                 break;
@@ -148,20 +157,8 @@ public class Poblacion implements Serializable {
         this.luminosidad = luminosidad;
     }
 
-    public void setComidaInicial(int comidaInicial) {
-        this.comidaInicial = comidaInicial;
-    }
-
     public void setDiaIncremento(int diaIncremento) {
         this.diaIncremento = diaIncremento;
-    }
-
-    public void setComidaIncremento(int comidaIncremento) {
-        this.comidaIncremento = comidaIncremento;
-    }
-
-    public void setComidaFinal(int comidaFinal) {
-        this.comidaFinal = comidaFinal;
     }
 
     public void setComidaPorDia(int[] comidaPorDia) {
