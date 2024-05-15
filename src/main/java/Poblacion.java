@@ -24,10 +24,10 @@ public class Poblacion implements Serializable {
         this.bacteriasIniciales = bacteriasIniciales;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
-        this.comidaInicial = comidaInicial;  // ya en microgramos
+        this.comidaInicial = comidaInicial;
         this.diaIncremento = diaIncremento;
-        this.comidaIncremento = comidaIncremento;  // ya en microgramos
-        this.comidaFinal = comidaFinal;  // ya en microgramos
+        this.comidaIncremento = comidaIncremento;
+        this.comidaFinal = comidaFinal;
         this.comidaPorDia = new int[duracionDias];
         calcularComidaPorDia(patronComida);
     }
@@ -38,14 +38,23 @@ public class Poblacion implements Serializable {
                 Arrays.fill(comidaPorDia, comidaInicial);
                 break;
             case 2:
-                double incrementoDiario = (double) (comidaFinal - comidaInicial) / comidaPorDia.length;
+                double incrementoDiario = (double) (comidaFinal - comidaInicial) / (comidaPorDia.length - 1);
                 for (int i = 0; i < comidaPorDia.length; i++) {
                     comidaPorDia[i] = comidaInicial + (int) Math.round(i * incrementoDiario);
                 }
                 break;
             case 3:
+                double totalIncrementDays = Math.ceil(comidaPorDia.length / 2.0);
+                double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / totalIncrementDays;
+                double currentFood = comidaInicial;
+
                 for (int i = 0; i < comidaPorDia.length; i++) {
-                    comidaPorDia[i] = (i % 2 == 0) ? comidaInicial : 0;
+                    if (i % 2 == 0) {
+                        comidaPorDia[i] = (int) Math.round(currentFood);
+                        currentFood += incrementoCadaDosDias;
+                    } else {
+                        comidaPorDia[i] = comidaPorDia[i - 1];
+                    }
                 }
                 break;
             default:
