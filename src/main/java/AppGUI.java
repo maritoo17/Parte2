@@ -2,9 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 public class AppGUI {
@@ -12,7 +12,7 @@ public class AppGUI {
     private DefaultListModel<String> listaModelo;
     private JList<String> listaPoblaciones;
     private Experimento experimento;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public AppGUI() {
         prepareGUI();
@@ -22,7 +22,7 @@ public class AppGUI {
     private void prepareGUI() {
         frame = new JFrame("Gestor de Experimentos con Bacterias");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1200, 1000);
+        frame.setSize(1500, 1000);
         frame.getContentPane().setBackground(new Color(230, 240, 255));
 
         listaModelo = new DefaultListModel<>();
@@ -56,6 +56,11 @@ public class AppGUI {
         buttonPanel.add(detailButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(saveAsButton);
+
+        // ComboBox for sorting options
+        JComboBox<String> sortComboBox = new JComboBox<>(new String[]{"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"});
+        sortComboBox.addActionListener(this::sortList);
+        buttonPanel.add(sortComboBox);
 
         openButton.addActionListener(this::openExperiment);
         newButton.addActionListener(e -> {
@@ -98,7 +103,7 @@ public class AppGUI {
 
     private void addPoblacion(ActionEvent e) {
         JTextField nameField = new JTextField();
-        JTextField startDateField = new JTextField(sdf.format(new Date()));
+        JTextField startDateField = new JTextField(dtf.format(LocalDate.now()));
         JTextField daysField = new JTextField();
         JTextField initialCountField = new JTextField();
         JTextField tempField = new JTextField();
@@ -108,7 +113,7 @@ public class AppGUI {
         JTextField incrementDayField = new JTextField();
         JTextField incrementFoodField = new JTextField();
         JTextField finalFoodField = new JTextField();
-        JTextField durationField = new JTextField("30"); // Default duration
+        JTextField durationField = new JTextField("30");
         String[] foodPatterns = {"Lineal", "Constante", "Incremental", "Alternante"};
         JComboBox<String> foodPatternBox = new JComboBox<>(foodPatterns);
 
@@ -140,7 +145,7 @@ public class AppGUI {
         if (result == JOptionPane.OK_OPTION) {
             try {
                 String nombre = nameField.getText();
-                Date startDate = sdf.parse(startDateField.getText());
+                LocalDate startDate = LocalDate.parse(startDateField.getText(), dtf);
                 int durationDays = Integer.parseInt(daysField.getText());
                 int initialCount = Integer.parseInt(initialCountField.getText());
                 double temperature = Double.parseDouble(tempField.getText());
@@ -149,19 +154,24 @@ public class AppGUI {
                 int incrementDay = Integer.parseInt(incrementDayField.getText());
                 int incrementFood = Integer.parseInt(incrementFoodField.getText());
                 int finalFood = Integer.parseInt(finalFoodField.getText());
+
+                if (initialFood > 300000 || incrementFood > 300000 || finalFood > 300000) {
+                    JOptionPane.showMessageDialog(frame, "La cantidad de comida no debe superar los 300,000 µg en ningún campo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 int foodPattern = foodPatternBox.getSelectedIndex() + 1;
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(startDate);
-                calendar.add(Calendar.DAY_OF_MONTH, durationDays);
-                Date endDate = calendar.getTime();
+                LocalDate endDate = startDate.plusDays(durationDays);
 
                 Poblacion poblacion = new Poblacion(nombre, startDate, endDate, initialCount, temperature, luminosity,
                         initialFood, incrementDay, incrementFood, finalFood, durationDays, foodPattern);
                 experimento.addPoblacion(poblacion);
                 updateList();
-            } catch (ParseException | NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Error al añadir la población: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (DateTimeParseException ex) {
+                JOptionPane.showMessageDialog(frame, "Error en el formato de fecha: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(frame, "Por favor, introduzca números válidos en los campos requeridos.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -195,8 +205,8 @@ public class AppGUI {
                                 "Temperatura: %.1f\nLuminosidad: %s\nComida Inicial: %d µg\nDía Incremento: %d\n" +
                                 "Comida Incremento: %d µg\nComida Final: %d µg\nComida Diaria:\n%s",
                         poblacion.getNombre(),
-                        sdf.format(poblacion.getFechaInicio()),
-                        sdf.format(poblacion.getFechaFin()),
+                        dtf.format(poblacion.getFechaInicio()),
+                        dtf.format(poblacion.getFechaFin()),
                         poblacion.getBacteriasIniciales(),
                         poblacion.getTemperatura(),
                         poblacion.getLuminosidad(),
@@ -237,6 +247,25 @@ public class AppGUI {
         listaModelo.clear();
         for (Poblacion p : experimento.getPoblaciones()) {
             listaModelo.addElement(p.getNombre());
+        }
+    }
+
+    private void sortList(ActionEvent e) {
+        JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+        String selected = (String) comboBox.getSelectedItem();
+        if (selected != null) {
+            switch (selected) {
+                case "Ordenar por Fecha de Inicio":
+                    experimento.ordenarPorFechaInicio();
+                    break;
+                case "Ordenar por Nombre":
+                    experimento.ordenarPorNombre();
+                    break;
+                case "Ordenar por Número de Bacterias":
+                    experimento.ordenarPorNumeroBacterias();
+                    break;
+            }
+            updateList();
         }
     }
 
