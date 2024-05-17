@@ -12,7 +12,6 @@ public class Simulacion {
         bacterias = new ArrayList<>();
         random = new Random();
 
-        // Inicializar bacterias en el centro del plato
         int centroInicio = 8;
         int centroFin = 12;
         int bacteriasInicialesPorCelda = numBacterias / 16;
@@ -81,8 +80,6 @@ public class Simulacion {
         if (numeroAleatorio < probMuerte) {
             bacterias.remove(bacteria);
         } else if (numeroAleatorio >= probMover) {
-            moverBacteria(bacteria);
-        } else {
             moverBacteria(bacteria);
         }
     }
