@@ -25,7 +25,6 @@ public class Simulacion {
             }
         }
 
-        // Distribuir comida
         int comidaPorCelda = comidaTotal / (plato.getCeldas().length * plato.getCeldas()[0].length);
         for (int i = 0; i < plato.getCeldas().length; i++) {
             for (int j = 0; j < plato.getCeldas()[0].length; j++) {
