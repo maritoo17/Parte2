@@ -82,6 +82,8 @@ public class Simulacion {
             bacterias.remove(bacteria);
         } else if (numeroAleatorio >= probMover) {
             moverBacteria(bacteria);
+        } else {
+            moverBacteria(bacteria);
         }
     }
 
