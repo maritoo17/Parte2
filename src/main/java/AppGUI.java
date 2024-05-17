@@ -173,7 +173,7 @@ public class AppGUI {
                 Poblacion poblacion = new Poblacion(nombre, startDate, endDate, initialCount, temperature, luminosity,
                         initialFood, incrementDay, incrementFood, finalFood, durationDays, foodPattern);
                 experimento.addPoblacion(poblacion);
-                updateList(); // Asegúrate de actualizar la lista después de agregar una población
+                updateList();
             } catch (DateTimeParseException ex) {
                 JOptionPane.showMessageDialog(frame, "Error en el formato de fecha: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (NumberFormatException ex) {
