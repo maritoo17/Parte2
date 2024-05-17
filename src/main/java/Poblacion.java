@@ -1,11 +1,11 @@
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 
 public class Poblacion implements Serializable {
     private String nombre;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private int bacteriasIniciales;
     private double temperatura;
     private String luminosidad;
@@ -15,7 +15,7 @@ public class Poblacion implements Serializable {
     private int comidaFinal;
     private int[] comidaPorDia;
 
-    public Poblacion(String nombre, Date fechaInicio, Date fechaFin, int bacteriasIniciales,
+    public Poblacion(String nombre, LocalDate fechaInicio, LocalDate fechaFin, int bacteriasIniciales,
                      double temperatura, String luminosidad, int comidaInicial, int diaIncremento,
                      int comidaIncremento, int comidaFinal, int duracionDias, int patronComida) {
         this.nombre = nombre;
@@ -32,18 +32,6 @@ public class Poblacion implements Serializable {
         calcularComidaPorDia(patronComida);
     }
 
-    public void setComidaInicial(int comidaInicial) {
-        this.comidaInicial = comidaInicial * 1000;
-    }
-
-    public void setComidaIncremento(int comidaIncremento) {
-        this.comidaIncremento = comidaIncremento * 1000;
-    }
-
-    public void setComidaFinal(int comidaFinal) {
-        this.comidaFinal = comidaFinal * 1000;
-    }
-
     private void calcularComidaPorDia(int patronComida) {
         switch (patronComida) {
             case 1:
@@ -53,6 +41,9 @@ public class Poblacion implements Serializable {
                 double incrementoDiario = (double) (comidaFinal - comidaInicial) / (comidaPorDia.length - 1);
                 for (int i = 0; i < comidaPorDia.length; i++) {
                     comidaPorDia[i] = comidaInicial + (int) Math.round(i * incrementoDiario);
+                    if (comidaPorDia[i] > 300000) {
+                        throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
+                    }
                 }
                 break;
             case 3:
@@ -63,6 +54,9 @@ public class Poblacion implements Serializable {
                     } else {
                         double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / Math.ceil((comidaPorDia.length - 1) / 2.0);
                         comidaPorDia[i] = (int) Math.round(comidaPorDia[i - 1] + incrementoCadaDosDias);
+                        if (comidaPorDia[i] > 300000) {
+                            throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
+                        }
                     }
                 }
                 break;
@@ -89,15 +83,16 @@ public class Poblacion implements Serializable {
         comidaPorDia[comidaPorDia.length - 1] = comidaFinal;
     }
 
+    // Getters and Setters
     public String getNombre() {
         return nombre;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
@@ -131,37 +126,5 @@ public class Poblacion implements Serializable {
 
     public int[] getComidaPorDia() {
         return comidaPorDia;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public void setBacteriasIniciales(int bacteriasIniciales) {
-        this.bacteriasIniciales = bacteriasIniciales;
-    }
-
-    public void setTemperatura(double temperatura) {
-        this.temperatura = temperatura;
-    }
-
-    public void setLuminosidad(String luminosidad) {
-        this.luminosidad = luminosidad;
-    }
-
-    public void setDiaIncremento(int diaIncremento) {
-        this.diaIncremento = diaIncremento;
-    }
-
-    public void setComidaPorDia(int[] comidaPorDia) {
-        this.comidaPorDia = comidaPorDia;
     }
 }
