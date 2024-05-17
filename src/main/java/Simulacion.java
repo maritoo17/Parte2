@@ -37,8 +37,8 @@ public class Simulacion {
 
     public void ejecutarSimulacionDiaria() {
         List<Bacteria> nuevasBacterias = new ArrayList<>();
-
         List<Bacteria> bacteriasActuales = new ArrayList<>(bacterias);
+
         for (Bacteria bacteria : bacteriasActuales) {
             int x = bacteria.getX();
             int y = bacteria.getY();
