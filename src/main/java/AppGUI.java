@@ -1,11 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
+import java.util.List;
+import java.util.Comparator;
 
 public class AppGUI {
     private JFrame frame;
@@ -22,7 +23,7 @@ public class AppGUI {
     private void prepareGUI() {
         frame = new JFrame("Gestor de Experimentos con Bacterias");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1500, 1000);
+        frame.setSize(1200, 1000);
         frame.getContentPane().setBackground(new Color(230, 240, 255));
 
         listaModelo = new DefaultListModel<>();
@@ -48,6 +49,12 @@ public class AppGUI {
         JButton detailButton = createStyledButton("Detalles de Población", null);
         JButton saveButton = createStyledButton("Guardar", null);
         JButton saveAsButton = createStyledButton("Guardar Como", new Color(0, 71, 171));
+        JButton simulateButton = createStyledButton("Simular", new Color(34, 139, 34));
+
+        // ComboBox for sorting options
+        String[] sortingOptions = {"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"};
+        JComboBox<String> sortingComboBox = new JComboBox<>(sortingOptions);
+        sortingComboBox.addActionListener(this::sortList);
 
         buttonPanel.add(openButton);
         buttonPanel.add(newButton);
@@ -56,11 +63,10 @@ public class AppGUI {
         buttonPanel.add(detailButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(saveAsButton);
+        buttonPanel.add(simulateButton);
+        buttonPanel.add(sortingComboBox);
 
-        // ComboBox for sorting options
-        JComboBox<String> sortComboBox = new JComboBox<>(new String[]{"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"});
-        sortComboBox.addActionListener(this::sortList);
-        buttonPanel.add(sortComboBox);
+        simulateButton.addActionListener(e -> iniciarSimulacion());
 
         openButton.addActionListener(this::openExperiment);
         newButton.addActionListener(e -> {
@@ -167,7 +173,7 @@ public class AppGUI {
                 Poblacion poblacion = new Poblacion(nombre, startDate, endDate, initialCount, temperature, luminosity,
                         initialFood, incrementDay, incrementFood, finalFood, durationDays, foodPattern);
                 experimento.addPoblacion(poblacion);
-                updateList();
+                updateList(); // Asegúrate de actualizar la lista después de agregar una población
             } catch (DateTimeParseException ex) {
                 JOptionPane.showMessageDialog(frame, "Error en el formato de fecha: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (NumberFormatException ex) {
@@ -253,19 +259,35 @@ public class AppGUI {
     private void sortList(ActionEvent e) {
         JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
         String selected = (String) comboBox.getSelectedItem();
-        if (selected != null) {
-            switch (selected) {
-                case "Ordenar por Fecha de Inicio":
-                    experimento.ordenarPorFechaInicio();
-                    break;
-                case "Ordenar por Nombre":
-                    experimento.ordenarPorNombre();
-                    break;
-                case "Ordenar por Número de Bacterias":
-                    experimento.ordenarPorNumeroBacterias();
-                    break;
+        List<Poblacion> poblaciones = experimento.getPoblaciones();
+
+        switch (selected) {
+            case "Ordenar por Fecha de Inicio":
+                poblaciones.sort(Comparator.comparing(Poblacion::getFechaInicio));
+                break;
+            case "Ordenar por Nombre":
+                poblaciones.sort(Comparator.comparing(Poblacion::getNombre));
+                break;
+            case "Ordenar por Número de Bacterias":
+                poblaciones.sort(Comparator.comparingInt(Poblacion::getBacteriasIniciales));
+                break;
+        }
+
+        updateList();
+    }
+
+    private void iniciarSimulacion() {
+        if (experimento.getPoblaciones().isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No hay poblaciones para simular.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        for (Poblacion poblacion : experimento.getPoblaciones()) {
+            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
+            for (int i = 0; i < poblacion.getDuracionDias(); i++) {
+                simulacion.ejecutarSimulacionDiaria();
             }
-            updateList();
+            new SimulacionGUI(simulacion.getPlato());
         }
     }
 
