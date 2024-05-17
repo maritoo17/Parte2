@@ -38,7 +38,8 @@ public class Simulacion {
     public void ejecutarSimulacionDiaria() {
         List<Bacteria> nuevasBacterias = new ArrayList<>();
 
-        for (Bacteria bacteria : bacterias) {
+        List<Bacteria> bacteriasActuales = new ArrayList<>(bacterias);
+        for (Bacteria bacteria : bacteriasActuales) {
             int x = bacteria.getX();
             int y = bacteria.getY();
             Celda celdaActual = plato.getCelda(x, y);
