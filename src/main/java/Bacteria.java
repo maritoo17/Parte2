@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class Bacteria {
     private int x;
     private int y;
