@@ -45,9 +45,4 @@ public class SimulacionGUI {
         frame.revalidate();
         frame.repaint();
     }
-
-    public void actualizarSimulacion(PlatoCultivo plato) {
-        this.plato = plato;
-        actualizarGUI();
-    }
 }
