@@ -12,6 +12,7 @@ public class Poblacion implements Serializable {
     private int comidaInicial;
     private int diaIncremento;
     private int comidaIncremento;
+    private int duracionDias;
     private int comidaFinal;
     private int[] comidaPorDia;
 
@@ -83,7 +84,6 @@ public class Poblacion implements Serializable {
         comidaPorDia[comidaPorDia.length - 1] = comidaFinal;
     }
 
-    // Getters and Setters
     public String getNombre() {
         return nombre;
     }
@@ -126,5 +126,13 @@ public class Poblacion implements Serializable {
 
     public int[] getComidaPorDia() {
         return comidaPorDia;
+    }
+
+    public int getDuracionDias() {
+        return duracionDias;
+    }
+
+    public void setDuracionDias(int duracionDias) {
+        this.duracionDias = duracionDias;
     }
 }
