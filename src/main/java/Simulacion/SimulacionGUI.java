@@ -9,6 +9,7 @@ public class SimulacionGUI {
     private int duracionDias;
     private Timer timer;
     private Simulacion simulacion;
+    private JLabel[][] cells;
 
     public SimulacionGUI(PlatoCultivo plato, int duracionDias, Simulacion simulacion) {
         this.plato = plato;
@@ -18,10 +19,21 @@ public class SimulacionGUI {
     }
 
     private void initialize() {
-        frame = new JFrame("Simulación de Montecarlo");
+        frame = new JFrame("Simulación de Bacterias");
         frame.setSize(800, 800);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.getContentPane().setLayout(new GridLayout(20, 20));
+        frame.getContentPane().setLayout(new GridLayout(plato.getTamaño(), plato.getTamaño()));
+
+        cells = new JLabel[plato.getTamaño()][plato.getTamaño()];
+        for (int i = 0; i < plato.getTamaño(); i++) {
+            for (int j = 0; j < plato.getTamaño(); j++) {
+                cells[i][j] = new JLabel();
+                cells[i][j].setOpaque(true);
+                cells[i][j].setBackground(getColorByBacteriaCount(plato.getCelda(i, j).getBacterias()));
+                cells[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                frame.getContentPane().add(cells[i][j]);
+            }
+        }
 
         timer = new Timer(1000, e -> actualizarGUI());
         timer.start();
@@ -30,24 +42,14 @@ public class SimulacionGUI {
     }
 
     private void actualizarGUI() {
-        frame.getContentPane().removeAll();
+        simulacion.ejecutarSimulacionDiaria();
 
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
-                Celda celda = plato.getCelda(i, j);
-                int bacterias = celda.getBacterias();
-                Color color = getColorByBacteriaCount(bacterias);
-
-                JPanel panel = new JPanel();
-                panel.setBackground(color);
-                frame.getContentPane().add(panel);
+        for (int i = 0; i < plato.getTamaño(); i++) {
+            for (int j = 0; j < plato.getTamaño(); j++) {
+                cells[i][j].setBackground(getColorByBacteriaCount(plato.getCelda(i, j).getBacterias()));
             }
         }
 
-        frame.revalidate();
-        frame.repaint();
-
-        simulacion.ejecutarSimulacionDiaria();
         duracionDias--;
         if (duracionDias <= 0) {
             timer.stop();
