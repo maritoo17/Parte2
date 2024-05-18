@@ -25,10 +25,11 @@ public class Poblacion implements Serializable {
         this.bacteriasIniciales = bacteriasIniciales;
         this.temperatura = temperatura;
         this.luminosidad = luminosidad;
-        this.comidaInicial = comidaInicial * 1000;
+        this.comidaInicial = comidaInicial;
         this.diaIncremento = diaIncremento;
-        this.comidaIncremento = comidaIncremento * 1000;
-        this.comidaFinal = comidaFinal * 1000;
+        this.comidaIncremento = comidaIncremento;
+        this.comidaFinal = comidaFinal;
+        this.duracionDias = duracionDias;
         this.comidaPorDia = new int[duracionDias];
         calcularComidaPorDia(patronComida);
     }
@@ -42,9 +43,7 @@ public class Poblacion implements Serializable {
                 double incrementoDiario = (double) (comidaFinal - comidaInicial) / (comidaPorDia.length - 1);
                 for (int i = 0; i < comidaPorDia.length; i++) {
                     comidaPorDia[i] = comidaInicial + (int) Math.round(i * incrementoDiario);
-                    if (comidaPorDia[i] > 300000) {
-                        throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
-                    }
+                    verificarLimiteComida(comidaPorDia[i]);
                 }
                 break;
             case 3:
@@ -55,9 +54,7 @@ public class Poblacion implements Serializable {
                     } else {
                         double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / Math.ceil((comidaPorDia.length - 1) / 2.0);
                         comidaPorDia[i] = (int) Math.round(comidaPorDia[i - 1] + incrementoCadaDosDias);
-                        if (comidaPorDia[i] > 300000) {
-                            throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
-                        }
+                        verificarLimiteComida(comidaPorDia[i]);
                     }
                 }
                 break;
@@ -72,6 +69,7 @@ public class Poblacion implements Serializable {
             double incrementoDiario = (double) (comidaIncremento - comidaInicial) / diaIncremento;
             for (int i = 1; i <= diaIncremento; i++) {
                 comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(incrementoDiario);
+                verificarLimiteComida(comidaPorDia[i]);
             }
         }
         int díasRestantes = comidaPorDia.length - diaIncremento - 1;
@@ -79,9 +77,17 @@ public class Poblacion implements Serializable {
             double decrementoDiario = (double) (comidaFinal - comidaPorDia[diaIncremento]) / díasRestantes;
             for (int i = diaIncremento + 1; i < comidaPorDia.length; i++) {
                 comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(decrementoDiario);
+                verificarLimiteComida(comidaPorDia[i]);
             }
         }
         comidaPorDia[comidaPorDia.length - 1] = comidaFinal;
+        verificarLimiteComida(comidaPorDia[comidaPorDia.length - 1]);
+    }
+
+    private void verificarLimiteComida(int comida) {
+        if (comida > 300000) {
+            throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000 µg");
+        }
     }
 
     public String getNombre() {
