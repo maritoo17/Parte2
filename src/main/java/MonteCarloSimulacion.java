@@ -1,12 +1,12 @@
 import java.util.*;
 
-public class MontecarloSimulacion {
+public class MonteCarloSimulacion {
     private PlatoCultivo plato;
     private List<Bacteria> bacterias;
     private int duration;
     private Random random;
 
-    public MontecarloSimulacion(int numBacterias, int comidaTotal, int duration) {
+    public MonteCarloSimulacion(int numBacterias, int comidaTotal, int duration) {
         this.plato = new PlatoCultivo();
         this.bacterias = new ArrayList<>();
         this.duration = duration;
@@ -33,13 +33,7 @@ public class MontecarloSimulacion {
         }
     }
 
-    public void simulate() {
-        for (int day = 0; day < duration; day++) {
-            simulateDay();
-        }
-    }
-
-    private void simulateDay() {
+    public void simulateDay() {
         List<Bacteria> nuevasBacterias = new ArrayList<>();
         List<Bacteria> bacteriasActuales = new ArrayList<>(bacterias);
 
