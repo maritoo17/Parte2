@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Comparator;
-import java.util.Random;
 
 public class AppGUI {
     private JFrame frame;
@@ -297,29 +296,21 @@ public class AppGUI {
     }
 
     private void ejecutarSimulacionMontecarlo() {
-        int totalPoints = 1_000_000;
-        double piEstimate = estimatePi(totalPoints);
-        JOptionPane.showMessageDialog(frame, "Estimación de Pi mediante Montecarlo: " + piEstimate);
-    }
-
-    public static double estimatePi(int totalPoints) {
-        int pointsInsideCircle = 0;
-        Random random = new Random();
-
-        for (int i = 0; i < totalPoints; i++) {
-            double x = random.nextDouble() * 2 - 1;
-            double y = random.nextDouble() * 2 - 1;
-
-            if (x * x + y * y <= 1) {
-                pointsInsideCircle++;
-            }
+        if (experimento.getPoblaciones().isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No hay poblaciones para simular.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        return 4.0 * pointsInsideCircle / totalPoints;
+        for (Poblacion poblacion : experimento.getPoblaciones()) {
+            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
+            for (int i = 0; i < poblacion.getDuracionDias(); i++) {
+                simulacion.ejecutarSimulacionDiaria();
+            }
+            new SimulacionGUI(simulacion.getPlato());
+        }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AppGUI::new);
     }
 }
-
