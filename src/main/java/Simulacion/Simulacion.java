@@ -2,7 +2,6 @@ package Simulacion;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +17,7 @@ public class Simulacion {
         random = new Random();
         diaActual = 0;
 
+        // Inicializar las bacterias en el centro del plato
         int centroInicio = 8;
         int centroFin = 12;
         int bacteriasInicialesPorCelda = numBacterias / 16;
@@ -31,9 +31,10 @@ public class Simulacion {
             }
         }
 
-        int comidaPorCelda = comidaTotal / (plato.getCeldas().length * plato.getCeldas()[0].length);
-        for (int i = 0; i < plato.getCeldas().length; i++) {
-            for (int j = 0; j < plato.getCeldas()[0].length; j++) {
+        // Inicializar la comida en todas las celdas del plato
+        int comidaPorCelda = comidaTotal / (plato.getTamaño() * plato.getTamaño());
+        for (int i = 0; i < plato.getTamaño(); i++) {
+            for (int j = 0; j < plato.getTamaño(); j++) {
                 plato.getCelda(i, j).setComida(comidaPorCelda);
             }
         }
