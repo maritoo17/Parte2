@@ -1,9 +1,9 @@
 package Simulacion;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.awt.Color;
 
 public class Simulacion {
     private PlatoCultivo plato;
