@@ -286,11 +286,11 @@ public class AppGUI {
         }
 
         for (Poblacion poblacion : experimento.getPoblaciones()) {
-            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
+            MonteCarloSimulacion simulacion = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
             for (int i = 0; i < poblacion.getDuracionDias(); i++) {
-                simulacion.ejecutarSimulacionDiaria();
+                simulacion.simulateDay();
             }
-            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias());
+            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias(), simulacion);
         }
     }
 
@@ -301,9 +301,8 @@ public class AppGUI {
         }
 
         for (Poblacion poblacion : experimento.getPoblaciones()) {
-            MontecarloSimulacion monteCarlo = new MontecarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
-            monteCarlo.simulate();
-            new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias());
+            MonteCarloSimulacion monteCarlo = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
+            new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias(), monteCarlo);
         }
     }
 
