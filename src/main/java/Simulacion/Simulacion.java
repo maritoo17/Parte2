@@ -3,6 +3,7 @@ package Simulacion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.awt.Color;
 
 public class Simulacion {
     private PlatoCultivo plato;
@@ -24,7 +25,7 @@ public class Simulacion {
             for (int j = centroInicio; j < centroFin; j++) {
                 plato.getCelda(i, j).setBacterias(bacteriasInicialesPorCelda);
                 for (int k = 0; k < bacteriasInicialesPorCelda; k++) {
-                    bacterias.add(new Bacteria(i, j));
+                    bacterias.add(new Bacteria(i, j, Color.GREEN));
                 }
             }
         }
@@ -58,14 +59,14 @@ public class Simulacion {
 
             if (bacteria.getComidaConsumida() >= 150) {
                 for (int i = 0; i < 3; i++) {
-                    nuevasBacterias.add(new Bacteria(x, y));
+                    nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
             } else if (bacteria.getComidaConsumida() >= 100) {
                 for (int i = 0; i < 2; i++) {
-                    nuevasBacterias.add(new Bacteria(x, y));
+                    nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
             } else if (bacteria.getComidaConsumida() >= 50) {
-                nuevasBacterias.add(new Bacteria(x, y));
+                nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
             }
         }
 

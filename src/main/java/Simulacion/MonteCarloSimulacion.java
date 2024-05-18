@@ -1,6 +1,8 @@
 package Simulacion;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class MonteCarloSimulacion {
     private PlatoCultivo plato;
@@ -22,7 +24,7 @@ public class MonteCarloSimulacion {
             for (int j = centroInicio; j < centroFin; j++) {
                 plato.getCelda(i, j).setBacterias(bacteriasInicialesPorCelda);
                 for (int k = 0; k < bacteriasInicialesPorCelda; k++) {
-                    bacterias.add(new Bacteria(i, j));
+                    bacterias.add(new Bacteria(i, j, Color.GREEN));
                 }
             }
         }
@@ -56,14 +58,14 @@ public class MonteCarloSimulacion {
 
             if (bacteria.getComidaConsumida() >= 150) {
                 for (int i = 0; i < 3; i++) {
-                    nuevasBacterias.add(new Bacteria(x, y));
+                    nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
             } else if (bacteria.getComidaConsumida() >= 100) {
                 for (int i = 0; i < 2; i++) {
-                    nuevasBacterias.add(new Bacteria(x, y));
+                    nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
             } else if (bacteria.getComidaConsumida() >= 50) {
-                nuevasBacterias.add(new Bacteria(x, y));
+                nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
             }
         }
 
@@ -128,7 +130,7 @@ public class MonteCarloSimulacion {
             for (int j = centroInicio; j < centroFin; j++) {
                 plato.getCelda(i, j).setBacterias(bacteriasInicialesPorCelda);
                 for (int k = 0; k < bacteriasInicialesPorCelda; k++) {
-                    bacterias.add(new Bacteria(i, j));
+                    bacterias.add(new Bacteria(i, j, Color.GREEN));
                 }
             }
         }
@@ -141,4 +143,3 @@ public class MonteCarloSimulacion {
         }
     }
 }
-
