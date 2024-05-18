@@ -3,6 +3,7 @@ package Main;
 import Control.*;
 import Simulacion.*;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,6 +58,7 @@ public class AppGUI {
         JButton simulateButton = createStyledButton("Simular", new Color(34, 139, 34));
         JButton monteCarloButton = createStyledButton("Simulación Montecarlo", new Color(255, 140, 0));
 
+        // ComboBox for sorting options
         String[] sortingOptions = {"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"};
         JComboBox<String> sortingComboBox = new JComboBox<>(sortingOptions);
         sortingComboBox.addActionListener(this::sortList);
@@ -290,13 +292,11 @@ public class AppGUI {
         }
 
         for (Poblacion poblacion : experimento.getPoblaciones()) {
-            MonteCarloSimulacion simulacion = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
-            for (int i = 0; i < poblacion.getDuracionDias(); i++) {
-                simulacion.simulateDay();
-            }
+            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
             new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias(), simulacion);
         }
     }
+
 
     private void ejecutarSimulacionMontecarlo() {
         if (experimento.getPoblaciones().isEmpty()) {
@@ -304,9 +304,10 @@ public class AppGUI {
             return;
         }
 
-        Poblacion poblacion = experimento.getPoblaciones().get(0); // Asumimos una población por simplicidad
-        MonteCarloSimulacion monteCarlo = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
-        new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias(), monteCarlo);
+        for (Poblacion poblacion : experimento.getPoblaciones()) {
+            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
+            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias(), simulacion);
+        }
     }
 
     public static void main(String[] args) {
