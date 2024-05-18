@@ -1,3 +1,11 @@
+package Main;
+
+import Control.Experimento;
+import Control.FileManager;
+import Control.Poblacion;
+import Simulacion.MonteCarloSimulacion;
+import Simulacion.SimulacionGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -43,7 +51,7 @@ public class AppGUI {
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
         JButton openButton = createStyledButton("Abrir", null);
-        JButton newButton = createStyledButton("Nuevo Experimento", null);
+        JButton newButton = createStyledButton("Nuevo Control.Experimento", null);
         JButton addButton = createStyledButton("Añadir Población", null);
         JButton deleteButton = createStyledButton("Eliminar Población", new Color(255, 0, 0));
         JButton detailButton = createStyledButton("Detalles de Población", null);
@@ -103,7 +111,7 @@ public class AppGUI {
             try {
                 experimento = FileManager.cargarExperimento(fileChooser.getSelectedFile().getAbsolutePath());
                 updateList();
-                JOptionPane.showMessageDialog(frame, "Experimento cargado exitosamente.");
+                JOptionPane.showMessageDialog(frame, "Control.Experimento cargado exitosamente.");
             } catch (IOException | ClassNotFoundException ex) {
                 JOptionPane.showMessageDialog(frame, "Error al abrir el archivo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -246,7 +254,7 @@ public class AppGUI {
 
         try {
             FileManager.guardarExperimento(experimento, experimento.getArchivoRuta());
-            JOptionPane.showMessageDialog(frame, "Experimento guardado exitosamente.", "Guardado", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Control.Experimento guardado exitosamente.", "Guardado", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(frame, "Error al guardar el archivo: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

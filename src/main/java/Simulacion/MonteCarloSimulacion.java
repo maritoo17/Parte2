@@ -1,3 +1,9 @@
+package Simulacion;
+
+import Simulacion.Bacteria;
+import Simulacion.Celda;
+import Simulacion.PlatoCultivo;
+
 import java.util.*;
 
 public class MonteCarloSimulacion {

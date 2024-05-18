@@ -1,3 +1,5 @@
+package Simulacion;
+
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,3 +1,7 @@
+package Simulacion;
+
+import Simulacion.Celda;
+
 public class PlatoCultivo {
     private final int tamaño = 20;
     private Celda[][] celdas;

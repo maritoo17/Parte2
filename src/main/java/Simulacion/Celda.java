@@ -1,3 +1,5 @@
+package Simulacion;
+
 public class Celda {
     private int bacterias;
     private int comida;

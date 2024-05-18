@@ -1,3 +1,5 @@
+package Simulacion;
+
 public class Bacteria {
     private int x;
     private int y;
