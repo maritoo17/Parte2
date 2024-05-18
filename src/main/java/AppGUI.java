@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Comparator;
+import java.util.Random;
 
 public class AppGUI {
     private JFrame frame;
@@ -50,6 +51,7 @@ public class AppGUI {
         JButton saveButton = createStyledButton("Guardar", null);
         JButton saveAsButton = createStyledButton("Guardar Como", new Color(0, 71, 171));
         JButton simulateButton = createStyledButton("Simular", new Color(34, 139, 34));
+        JButton monteCarloButton = createStyledButton("Simulación Montecarlo", new Color(255, 140, 0));
 
         // ComboBox for sorting options
         String[] sortingOptions = {"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"};
@@ -64,9 +66,11 @@ public class AppGUI {
         buttonPanel.add(saveButton);
         buttonPanel.add(saveAsButton);
         buttonPanel.add(simulateButton);
+        buttonPanel.add(monteCarloButton);
         buttonPanel.add(sortingComboBox);
 
         simulateButton.addActionListener(e -> iniciarSimulacion());
+        monteCarloButton.addActionListener(e -> ejecutarSimulacionMontecarlo());
 
         openButton.addActionListener(this::openExperiment);
         newButton.addActionListener(e -> {
@@ -291,7 +295,30 @@ public class AppGUI {
         }
     }
 
+    private void ejecutarSimulacionMontecarlo() {
+        int totalPoints = 1_000_000;
+        double piEstimate = estimatePi(totalPoints);
+        JOptionPane.showMessageDialog(frame, "Estimación de Pi mediante Montecarlo: " + piEstimate);
+    }
+
+    public static double estimatePi(int totalPoints) {
+        int pointsInsideCircle = 0;
+        Random random = new Random();
+
+        for (int i = 0; i < totalPoints; i++) {
+            double x = random.nextDouble() * 2 - 1;
+            double y = random.nextDouble() * 2 - 1;
+
+            if (x * x + y * y <= 1) {
+                pointsInsideCircle++;
+            }
+        }
+
+        return 4.0 * pointsInsideCircle / totalPoints;
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AppGUI::new);
     }
 }
+
