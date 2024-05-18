@@ -4,19 +4,23 @@ import java.awt.*;
 public class SimulacionGUI {
     private JFrame frame;
     private PlatoCultivo plato;
+    private int duracionDias;
+    private Timer timer;
 
-    public SimulacionGUI(PlatoCultivo plato) {
+    public SimulacionGUI(PlatoCultivo plato, int duracionDias) {
         this.plato = plato;
+        this.duracionDias = duracionDias;
         initialize();
     }
 
     private void initialize() {
         frame = new JFrame("Simulación de Montecarlo");
         frame.setSize(800, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().setLayout(new GridLayout(20, 20));
 
-        actualizarGUI();
+        timer = new Timer(1000, e -> actualizarGUI());
+        timer.start();
 
         frame.setVisible(true);
     }
@@ -38,6 +42,11 @@ public class SimulacionGUI {
 
         frame.revalidate();
         frame.repaint();
+
+        duracionDias--;
+        if (duracionDias <= 0) {
+            timer.stop();
+        }
     }
 
     private Color getColorByBacteriaCount(int bacterias) {
