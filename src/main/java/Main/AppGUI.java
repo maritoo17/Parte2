@@ -297,7 +297,6 @@ public class AppGUI {
         }
     }
 
-
     private void ejecutarSimulacionMontecarlo() {
         if (experimento.getPoblaciones().isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No hay poblaciones para simular.", "Error", JOptionPane.ERROR_MESSAGE);
