@@ -91,16 +91,23 @@ public class MonteCarloSimulacion {
         int nuevoX = x;
         int nuevoY = y;
 
-        int numeroAleatorio = random.nextInt(100);
+        // Mover la bacteria hacia la celda adyacente con más comida
+        int maxComida = 0;
+        int[] dx = {-1, 0, 1, 0, -1, 1, -1, 1};
+        int[] dy = {0, 1, 0, -1, -1, -1, 1, 1};
 
-        if (numeroAleatorio >= 60 && numeroAleatorio < 65 && x > 0) nuevoX = x - 1;
-        else if (numeroAleatorio >= 65 && numeroAleatorio < 70 && x < 19) nuevoX = x + 1;
-        else if (numeroAleatorio >= 70 && numeroAleatorio < 75 && y > 0) nuevoY = y - 1;
-        else if (numeroAleatorio >= 75 && numeroAleatorio < 80 && y < 19) nuevoY = y + 1;
-        else if (numeroAleatorio >= 80 && numeroAleatorio < 85 && x > 0 && y > 0) { nuevoX = x - 1; nuevoY = y - 1; }
-        else if (numeroAleatorio >= 85 && numeroAleatorio < 90 && x < 19 && y > 0) { nuevoX = x + 1; nuevoY = y - 1; }
-        else if (numeroAleatorio >= 90 && numeroAleatorio < 95 && x > 0 && y < 19) { nuevoX = x - 1; nuevoY = y + 1; }
-        else if (numeroAleatorio >= 95 && numeroAleatorio < 100 && x < 19 && y < 19) { nuevoX = x + 1; nuevoY = y + 1; }
+        for (int i = 0; i < dx.length; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (nx >= 0 && nx < 20 && ny >= 0 && ny < 20) {
+                int comida = plato.getCelda(nx, ny).getComida();
+                if (comida > maxComida) {
+                    maxComida = comida;
+                    nuevoX = nx;
+                    nuevoY = ny;
+                }
+            }
+        }
 
         plato.getCelda(bacteria.getX(), bacteria.getY()).setBacterias(plato.getCelda(bacteria.getX(), bacteria.getY()).getBacterias() - 1);
         plato.getCelda(nuevoX, nuevoY).setBacterias(plato.getCelda(nuevoX, nuevoY).getBacterias() + 1);
@@ -134,3 +141,4 @@ public class MonteCarloSimulacion {
         }
     }
 }
+
