@@ -8,9 +8,9 @@ public class SimulacionGUI {
     private PlatoCultivo plato;
     private int duracionDias;
     private Timer timer;
-    private MonteCarloSimulacion simulacion;
+    private Simulacion simulacion;
 
-    public SimulacionGUI(PlatoCultivo plato, int duracionDias, MonteCarloSimulacion simulacion) {
+    public SimulacionGUI(PlatoCultivo plato, int duracionDias, Simulacion simulacion) {
         this.plato = plato;
         this.duracionDias = duracionDias;
         this.simulacion = simulacion;
@@ -47,7 +47,7 @@ public class SimulacionGUI {
         frame.revalidate();
         frame.repaint();
 
-        simulacion.simulateDay();
+        simulacion.ejecutarSimulacionDiaria();
         duracionDias--;
         if (duracionDias <= 0) {
             timer.stop();
