@@ -31,64 +31,52 @@ public class Poblacion implements Serializable {
         this.diaIncremento = diaIncremento;
         this.comidaIncremento = comidaIncremento;
         this.comidaFinal = comidaFinal;
-        this.duracionDias = duracionDias;
         this.comidaPorDia = new int[duracionDias];
         calcularComidaPorDia(patronComida);
     }
 
     private void calcularComidaPorDia(int patronComida) {
         switch (patronComida) {
-            case 1:
+            case 1: // Constante
                 Arrays.fill(comidaPorDia, comidaInicial);
                 break;
-            case 2:
+            case 2: // Lineal
                 double incrementoDiario = (double) (comidaFinal - comidaInicial) / (comidaPorDia.length - 1);
                 for (int i = 0; i < comidaPorDia.length; i++) {
                     comidaPorDia[i] = comidaInicial + (int) Math.round(i * incrementoDiario);
-                    verificarLimiteComida(comidaPorDia[i]);
+                    if (comidaPorDia[i] > 300000) {
+                        throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
+                    }
                 }
                 break;
-            case 3:
+            case 3: // Incremental
                 comidaPorDia[0] = comidaInicial;
                 for (int i = 1; i < comidaPorDia.length; i++) {
-                    if (i % 2 == 1) {
-                        comidaPorDia[i] = comidaPorDia[i - 1];
+                    if (i % diaIncremento == 0) {
+                        comidaPorDia[i] = comidaPorDia[i - 1] + comidaIncremento;
                     } else {
-                        double incrementoCadaDosDias = (double) (comidaFinal - comidaInicial) / Math.ceil((comidaPorDia.length - 1) / 2.0);
-                        comidaPorDia[i] = (int) Math.round(comidaPorDia[i - 1] + incrementoCadaDosDias);
-                        verificarLimiteComida(comidaPorDia[i]);
+                        comidaPorDia[i] = comidaPorDia[i - 1];
+                    }
+                    if (comidaPorDia[i] > 300000) {
+                        throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
+                    }
+                }
+                break;
+            case 4: // Alternante
+                comidaPorDia[0] = comidaInicial;
+                for (int i = 1; i < comidaPorDia.length; i++) {
+                    if (i % 2 == 0) {
+                        comidaPorDia[i] = comidaPorDia[i - 1] + comidaIncremento;
+                    } else {
+                        comidaPorDia[i] = comidaPorDia[i - 1];
+                    }
+                    if (comidaPorDia[i] > 300000) {
+                        throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000");
                     }
                 }
                 break;
             default:
-                calcularComidaLineal();
-        }
-    }
-
-    private void calcularComidaLineal() {
-        comidaPorDia[0] = comidaInicial;
-        if (diaIncremento > 0) {
-            double incrementoDiario = (double) (comidaIncremento - comidaInicial) / diaIncremento;
-            for (int i = 1; i <= diaIncremento; i++) {
-                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(incrementoDiario);
-                verificarLimiteComida(comidaPorDia[i]);
-            }
-        }
-        int díasRestantes = comidaPorDia.length - diaIncremento - 1;
-        if (díasRestantes > 0) {
-            double decrementoDiario = (double) (comidaFinal - comidaPorDia[diaIncremento]) / díasRestantes;
-            for (int i = diaIncremento + 1; i < comidaPorDia.length; i++) {
-                comidaPorDia[i] = comidaPorDia[i - 1] + (int) Math.round(decrementoDiario);
-                verificarLimiteComida(comidaPorDia[i]);
-            }
-        }
-        comidaPorDia[comidaPorDia.length - 1] = comidaFinal;
-        verificarLimiteComida(comidaPorDia[comidaPorDia.length - 1]);
-    }
-
-    private void verificarLimiteComida(int comida) {
-        if (comida > 300000) {
-            throw new IllegalArgumentException("La cantidad de comida diaria no puede ser mayor a 300000 µg");
+                throw new IllegalArgumentException("Patrón de comida no reconocido");
         }
     }
 
