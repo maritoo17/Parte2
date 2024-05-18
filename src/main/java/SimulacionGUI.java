@@ -28,13 +28,7 @@ public class SimulacionGUI {
             for (int j = 0; j < 20; j++) {
                 Celda celda = plato.getCelda(i, j);
                 int bacterias = celda.getBacterias();
-                Color color = Color.WHITE;
-
-                if (bacterias >= 20) color = Color.RED;
-                else if (bacterias >= 15) color = Color.MAGENTA;
-                else if (bacterias >= 10) color = Color.ORANGE;
-                else if (bacterias >= 5) color = Color.YELLOW;
-                else if (bacterias >= 1) color = Color.GREEN;
+                Color color = getColorByBacteriaCount(bacterias);
 
                 JPanel panel = new JPanel();
                 panel.setBackground(color);
@@ -44,5 +38,14 @@ public class SimulacionGUI {
 
         frame.revalidate();
         frame.repaint();
+    }
+
+    private Color getColorByBacteriaCount(int bacterias) {
+        if (bacterias >= 20) return Color.RED;
+        else if (bacterias >= 15) return Color.MAGENTA;
+        else if (bacterias >= 10) return Color.ORANGE;
+        else if (bacterias >= 5) return Color.YELLOW;
+        else if (bacterias >= 1) return Color.GREEN;
+        else return Color.WHITE;
     }
 }
