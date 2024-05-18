@@ -6,11 +6,13 @@ public class Simulacion {
     private PlatoCultivo plato;
     private List<Bacteria> bacterias;
     private Random random;
+    private int diaActual;
 
     public Simulacion(int numBacterias, int comidaTotal) {
         plato = new PlatoCultivo();
         bacterias = new ArrayList<>();
         random = new Random();
+        diaActual = 0;
 
         int centroInicio = 8;
         int centroFin = 12;
@@ -66,6 +68,7 @@ public class Simulacion {
         }
 
         bacterias.addAll(nuevasBacterias);
+        diaActual++;
     }
 
     private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMover) {
@@ -107,5 +110,9 @@ public class Simulacion {
 
     public PlatoCultivo getPlato() {
         return plato;
+    }
+
+    public int getDiaActual() {
+        return diaActual;
     }
 }
