@@ -50,6 +50,12 @@ public class SimulacionGUI {
             }
         }
 
+        for (Bacteria bacteria : simulacion.getBacterias()) {
+            int x = bacteria.getX();
+            int y = bacteria.getY();
+            cells[x][y].setBackground(getColorByBacteriaCount(plato.getCelda(x, y).getBacterias()));
+        }
+
         duracionDias--;
         if (duracionDias <= 0) {
             timer.stop();

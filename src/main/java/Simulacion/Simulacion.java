@@ -41,10 +41,9 @@ public class Simulacion {
 
     public void ejecutarSimulacionDiaria() {
         List<Bacteria> nuevasBacterias = new ArrayList<>();
-        Iterator<Bacteria> iterator = bacterias.iterator();
+        List<Bacteria> bacteriasActuales = new ArrayList<>(bacterias);
 
-        while (iterator.hasNext()) {
-            Bacteria bacteria = iterator.next();
+        for (Bacteria bacteria : bacteriasActuales) {
             int x = bacteria.getX();
             int y = bacteria.getY();
             Celda celdaActual = plato.getCelda(x, y);
@@ -52,11 +51,11 @@ public class Simulacion {
             for (int i = 0; i < 10; i++) {
                 int comidaEnCelda = celdaActual.getComida();
                 if (comidaEnCelda >= 100) {
-                    procesarBacteria(celdaActual, bacteria, 20, 3, 60, 100, iterator);
+                    procesarBacteria(celdaActual, bacteria, 20, 3, 60, 100);
                 } else if (comidaEnCelda > 9) {
-                    procesarBacteria(celdaActual, bacteria, 10, 6, 20, 100, iterator);
+                    procesarBacteria(celdaActual, bacteria, 10, 6, 20, 100);
                 } else {
-                    procesarBacteria(celdaActual, bacteria, 0, 20, 60, 100, iterator);
+                    procesarBacteria(celdaActual, bacteria, 0, 20, 60, 100);
                 }
             }
 
@@ -78,7 +77,7 @@ public class Simulacion {
         diaActual++;
     }
 
-    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMoverInicio, int probMoverFin, Iterator<Bacteria> iterator) {
+    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMoverInicio, int probMoverFin) {
         int numeroAleatorio = random.nextInt(100);
 
         if (comida > 0) {
@@ -87,7 +86,7 @@ public class Simulacion {
         }
 
         if (numeroAleatorio < probMuerte) {
-            iterator.remove();
+            bacterias.remove(bacteria);
         } else if (numeroAleatorio >= probMoverInicio && numeroAleatorio < probMoverFin) {
             moverBacteria(bacteria);
         }
@@ -121,5 +120,9 @@ public class Simulacion {
 
     public int getDiaActual() {
         return diaActual;
+    }
+
+    public List<Bacteria> getBacterias() {
+        return bacterias;
     }
 }
