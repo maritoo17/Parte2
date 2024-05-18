@@ -185,7 +185,6 @@ public class AppGUI {
         }
     }
 
-
     private void deletePoblacion(ActionEvent e) {
         String selected = listaPoblaciones.getSelectedValue();
         if (selected != null) {
@@ -302,8 +301,9 @@ public class AppGUI {
         }
 
         for (Poblacion poblacion : experimento.getPoblaciones()) {
-            Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
-            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias());
+            MontecarloSimulacion monteCarlo = new MontecarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
+            monteCarlo.simulate();
+            new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias());
         }
     }
 
