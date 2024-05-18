@@ -291,7 +291,7 @@ public class AppGUI {
             for (int i = 0; i < poblacion.getDuracionDias(); i++) {
                 simulacion.ejecutarSimulacionDiaria();
             }
-            new SimulacionGUI(simulacion.getPlato());
+            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias());
         }
     }
 
@@ -303,10 +303,7 @@ public class AppGUI {
 
         for (Poblacion poblacion : experimento.getPoblaciones()) {
             Simulacion simulacion = new Simulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial());
-            for (int i = 0; i < poblacion.getDuracionDias(); i++) {
-                simulacion.ejecutarSimulacionDiaria();
-            }
-            new SimulacionGUI(simulacion.getPlato());
+            new SimulacionGUI(simulacion.getPlato(), poblacion.getDuracionDias());
         }
     }
 
