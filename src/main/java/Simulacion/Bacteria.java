@@ -11,8 +11,8 @@ public class Bacteria {
     public Bacteria(int x, int y, Color color) {
         this.x = x;
         this.y = y;
-        this.comidaConsumida = 0;
         this.color = color;
+        this.comidaConsumida = 0;
     }
 
     public int getX() {
@@ -27,8 +27,8 @@ public class Bacteria {
         return comidaConsumida;
     }
 
-    public void comer(int cantidad) {
-        comidaConsumida += cantidad;
+    public void comer(int comida) {
+        this.comidaConsumida += comida;
     }
 
     public void mover(int nuevoX, int nuevoY) {

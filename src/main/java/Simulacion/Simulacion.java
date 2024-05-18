@@ -2,6 +2,7 @@ package Simulacion;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -40,20 +41,21 @@ public class Simulacion {
 
     public void ejecutarSimulacionDiaria() {
         List<Bacteria> nuevasBacterias = new ArrayList<>();
-        List<Bacteria> bacteriasActuales = new ArrayList<>(bacterias);
+        Iterator<Bacteria> iterator = bacterias.iterator();
 
-        for (Bacteria bacteria : bacteriasActuales) {
+        while (iterator.hasNext()) {
+            Bacteria bacteria = iterator.next();
             int x = bacteria.getX();
             int y = bacteria.getY();
             Celda celdaActual = plato.getCelda(x, y);
 
             for (int i = 0; i < 10; i++) {
                 if (celdaActual.getComida() >= 100) {
-                    procesarBacteria(celdaActual, bacteria, 20, 3, 60);
+                    procesarBacteria(celdaActual, bacteria, 20, 3, 60, iterator);
                 } else if (celdaActual.getComida() > 9) {
-                    procesarBacteria(celdaActual, bacteria, 10, 6, 20);
+                    procesarBacteria(celdaActual, bacteria, 10, 6, 20, iterator);
                 } else {
-                    procesarBacteria(celdaActual, bacteria, 0, 20, 60);
+                    procesarBacteria(celdaActual, bacteria, 0, 20, 60, iterator);
                 }
             }
 
@@ -74,7 +76,7 @@ public class Simulacion {
         diaActual++;
     }
 
-    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMover) {
+    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMover, Iterator<Bacteria> iterator) {
         int numeroAleatorio = random.nextInt(100);
 
         if (comida > 0) {
@@ -83,7 +85,7 @@ public class Simulacion {
         }
 
         if (numeroAleatorio < probMuerte) {
-            bacterias.remove(bacteria);
+            iterator.remove();
         } else if (numeroAleatorio >= probMover) {
             moverBacteria(bacteria);
         }
