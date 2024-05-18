@@ -1,9 +1,5 @@
 package Simulacion;
 
-import Simulacion.Bacteria;
-import Simulacion.Celda;
-import Simulacion.PlatoCultivo;
-
 import java.util.*;
 
 public class MonteCarloSimulacion {
@@ -113,5 +109,28 @@ public class MonteCarloSimulacion {
 
     public PlatoCultivo getPlato() {
         return plato;
+    }
+
+    public void reiniciar(int numBacterias, int comidaTotal) {
+        this.bacterias.clear();
+        int centroInicio = 8;
+        int centroFin = 12;
+        int bacteriasInicialesPorCelda = numBacterias / 16;
+
+        for (int i = centroInicio; i < centroFin; i++) {
+            for (int j = centroInicio; j < centroFin; j++) {
+                plato.getCelda(i, j).setBacterias(bacteriasInicialesPorCelda);
+                for (int k = 0; k < bacteriasInicialesPorCelda; k++) {
+                    bacterias.add(new Bacteria(i, j));
+                }
+            }
+        }
+
+        int comidaPorCelda = comidaTotal / (plato.getCeldas().length * plato.getCeldas()[0].length);
+        for (int i = 0; i < plato.getCeldas().length; i++) {
+            for (int j = 0; j < plato.getCeldas()[0].length; j++) {
+                plato.getCelda(i, j).setComida(comidaPorCelda);
+            }
+        }
     }
 }
