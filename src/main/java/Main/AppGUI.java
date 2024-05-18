@@ -304,10 +304,9 @@ public class AppGUI {
             return;
         }
 
-        for (Poblacion poblacion : experimento.getPoblaciones()) {
-            MonteCarloSimulacion monteCarlo = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
-            new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias(), monteCarlo);
-        }
+        Poblacion poblacion = experimento.getPoblaciones().get(0); // Asumimos una población por simplicidad
+        MonteCarloSimulacion monteCarlo = new MonteCarloSimulacion(poblacion.getBacteriasIniciales(), poblacion.getComidaInicial(), poblacion.getDuracionDias());
+        new SimulacionGUI(monteCarlo.getPlato(), poblacion.getDuracionDias(), monteCarlo);
     }
 
     public static void main(String[] args) {
