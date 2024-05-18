@@ -50,24 +50,26 @@ public class Simulacion {
             Celda celdaActual = plato.getCelda(x, y);
 
             for (int i = 0; i < 10; i++) {
-                if (celdaActual.getComida() >= 100) {
-                    procesarBacteria(celdaActual, bacteria, 20, 3, 60, iterator);
-                } else if (celdaActual.getComida() > 9) {
-                    procesarBacteria(celdaActual, bacteria, 10, 6, 20, iterator);
+                int comidaEnCelda = celdaActual.getComida();
+                if (comidaEnCelda >= 100) {
+                    procesarBacteria(celdaActual, bacteria, 20, 3, 60, 100, iterator);
+                } else if (comidaEnCelda > 9) {
+                    procesarBacteria(celdaActual, bacteria, 10, 6, 20, 100, iterator);
                 } else {
-                    procesarBacteria(celdaActual, bacteria, 0, 20, 60, iterator);
+                    procesarBacteria(celdaActual, bacteria, 0, 20, 60, 100, iterator);
                 }
             }
 
-            if (bacteria.getComidaConsumida() >= 150) {
+            int comidaConsumida = bacteria.getComidaConsumida();
+            if (comidaConsumida >= 150) {
                 for (int i = 0; i < 3; i++) {
                     nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
-            } else if (bacteria.getComidaConsumida() >= 100) {
+            } else if (comidaConsumida >= 100) {
                 for (int i = 0; i < 2; i++) {
                     nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
                 }
-            } else if (bacteria.getComidaConsumida() >= 50) {
+            } else if (comidaConsumida >= 50) {
                 nuevasBacterias.add(new Bacteria(x, y, Color.GREEN));
             }
         }
@@ -76,7 +78,7 @@ public class Simulacion {
         diaActual++;
     }
 
-    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMover, Iterator<Bacteria> iterator) {
+    private void procesarBacteria(Celda celdaActual, Bacteria bacteria, int comida, int probMuerte, int probMoverInicio, int probMoverFin, Iterator<Bacteria> iterator) {
         int numeroAleatorio = random.nextInt(100);
 
         if (comida > 0) {
@@ -86,7 +88,7 @@ public class Simulacion {
 
         if (numeroAleatorio < probMuerte) {
             iterator.remove();
-        } else if (numeroAleatorio >= probMover) {
+        } else if (numeroAleatorio >= probMoverInicio && numeroAleatorio < probMoverFin) {
             moverBacteria(bacteria);
         }
     }
