@@ -88,26 +88,35 @@ public class Simulacion {
         if (numeroAleatorio < probMuerte) {
             bacterias.remove(bacteria);
         } else if (numeroAleatorio >= probMoverInicio && numeroAleatorio < probMoverFin) {
-            moverBacteria(bacteria);
+            moverBacteriaHaciaComida(bacteria);
         }
     }
 
-    private void moverBacteria(Bacteria bacteria) {
+    private void moverBacteriaHaciaComida(Bacteria bacteria) {
         int x = bacteria.getX();
         int y = bacteria.getY();
         int nuevoX = x;
         int nuevoY = y;
+        int maxComida = plato.getCelda(x, y).getComida();
 
-        int numeroAleatorio = random.nextInt(100);
+        int[][] direcciones = {
+                { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 },
+                { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 }
+        };
 
-        if (numeroAleatorio >= 60 && numeroAleatorio < 65 && x > 0) nuevoX = x - 1;
-        else if (numeroAleatorio >= 65 && numeroAleatorio < 70 && x < 19) nuevoX = x + 1;
-        else if (numeroAleatorio >= 70 && numeroAleatorio < 75 && y > 0) nuevoY = y - 1;
-        else if (numeroAleatorio >= 75 && numeroAleatorio < 80 && y < 19) nuevoY = y + 1;
-        else if (numeroAleatorio >= 80 && numeroAleatorio < 85 && x > 0 && y > 0) { nuevoX = x - 1; nuevoY = y - 1; }
-        else if (numeroAleatorio >= 85 && numeroAleatorio < 90 && x < 19 && y > 0) { nuevoX = x + 1; nuevoY = y - 1; }
-        else if (numeroAleatorio >= 90 && numeroAleatorio < 95 && x > 0 && y < 19) { nuevoX = x - 1; nuevoY = y + 1; }
-        else if (numeroAleatorio >= 95 && numeroAleatorio < 100 && x < 19 && y < 19) { nuevoX = x + 1; nuevoY = y + 1; }
+        for (int[] direccion : direcciones) {
+            int dx = x + direccion[0];
+            int dy = y + direccion[1];
+
+            if (dx >= 0 && dx < plato.getTamaño() && dy >= 0 && dy < plato.getTamaño()) {
+                int comida = plato.getCelda(dx, dy).getComida();
+                if (comida > maxComida) {
+                    maxComida = comida;
+                    nuevoX = dx;
+                    nuevoY = dy;
+                }
+            }
+        }
 
         plato.getCelda(bacteria.getX(), bacteria.getY()).setBacterias(plato.getCelda(bacteria.getX(), bacteria.getY()).getBacterias() - 1);
         plato.getCelda(nuevoX, nuevoY).setBacterias(plato.getCelda(nuevoX, nuevoY).getBacterias() + 1);
