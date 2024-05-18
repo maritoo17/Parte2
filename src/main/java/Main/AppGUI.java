@@ -57,7 +57,6 @@ public class AppGUI {
         JButton simulateButton = createStyledButton("Simular", new Color(34, 139, 34));
         JButton monteCarloButton = createStyledButton("Simulación Montecarlo", new Color(255, 140, 0));
 
-        // ComboBox for sorting options
         String[] sortingOptions = {"Ordenar por Fecha de Inicio", "Ordenar por Nombre", "Ordenar por Número de Bacterias"};
         JComboBox<String> sortingComboBox = new JComboBox<>(sortingOptions);
         sortingComboBox.addActionListener(this::sortList);
