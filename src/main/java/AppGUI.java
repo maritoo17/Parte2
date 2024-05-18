@@ -186,6 +186,7 @@ public class AppGUI {
         }
     }
 
+
     private void deletePoblacion(ActionEvent e) {
         String selected = listaPoblaciones.getSelectedValue();
         if (selected != null) {
