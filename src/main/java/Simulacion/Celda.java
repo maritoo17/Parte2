@@ -9,6 +9,11 @@ public class Celda {
         this.comida = 0;
     }
 
+    public Celda(int bacterias, int comida) {
+        this.bacterias = bacterias;
+        this.comida = comida;
+    }
+
     public int getBacterias() {
         return bacterias;
     }

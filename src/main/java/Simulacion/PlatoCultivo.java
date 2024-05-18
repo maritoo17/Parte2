@@ -13,6 +13,16 @@ public class PlatoCultivo {
         }
     }
 
+    public PlatoCultivo(int bacteriasIniciales, int comidaInicial) {
+        celdas = new Celda[tamaño][tamaño];
+        int bacteriasPorCelda = bacteriasIniciales / (tamaño * tamaño);
+        for (int i = 0; i < tamaño; i++) {
+            for (int j = 0; j < tamaño; j++) {
+                celdas[i][j] = new Celda(bacteriasPorCelda, comidaInicial);
+            }
+        }
+    }
+
     public Celda[][] getCeldas() {
         return celdas;
     }
